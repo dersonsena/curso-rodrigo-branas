@@ -1,20 +1,25 @@
+import { StudentNotFoundError } from "../../application/use-cases/enroll-student/EnrollStudentErrors";
 import { Student } from "../../domain/entities/Student";
-import { FindStudentyByCpfRepository } from "../../domain/repositories/StudentRepositories";
+import { FindStudentyByCpfRepository, StudentExistsRepository } from "../../domain/repositories/StudentRepositories";
 
-export class StudentInMemoryRepository implements FindStudentyByCpfRepository {
+export class StudentInMemoryRepository implements FindStudentyByCpfRepository, StudentExistsRepository {
   private readonly students = [
-    {name: 'Jennifer Lavínia da Rosa', cpf: '71436708044'},
-    {name: 'Aurora Heloise Almada', cpf: '03764808071'},
-    {name: 'Carolina Lívia Silveira', cpf: '69962322014'}
+    {completeName: 'Jennifer Lavínia da Rosa', cpfNumber: '71436708044'},
+    {completeName: 'Aurora Heloise Almada', cpfNumber: '03764808071'},
+    {completeName: 'Carolina Lívia Silveira', cpfNumber: '69962322014'}
   ]
 
-  findByCpf(cpf: string): Student | null {
-    const selectedCpf = this.students.find(student => student.cpf === cpf);
+  findByCpf(cpf: string): Student {
+    const studentRecord = this.students.find(record => record.cpfNumber === cpf);
 
-    if (!selectedCpf) {
-      return null;
+    if (!studentRecord) {
+      throw new StudentNotFoundError(cpf);
     }
 
-    return selectedCpf;
+    return new Student(studentRecord.completeName, studentRecord.cpfNumber);
+  }
+
+  exists(cpf: string): boolean {
+    return this.students.find(student => student.cpfNumber === cpf) !== undefined
   }
 }

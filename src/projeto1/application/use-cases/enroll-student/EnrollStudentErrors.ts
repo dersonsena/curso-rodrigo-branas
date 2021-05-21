@@ -18,3 +18,10 @@ export class StudentAlreadyExistsError extends Error {
     this.name = 'StudentAlreadyExistsError';
   }
 }
+
+export class StudentNotFoundError extends Error {
+  constructor (cpf: string) {
+    super(`Student with cpf '${cpf}' wasn't found`);
+    this.name = 'StudentNotFoundError';
+  }
+}

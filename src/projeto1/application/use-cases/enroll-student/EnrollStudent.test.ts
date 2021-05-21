@@ -4,7 +4,7 @@ import { InvalidCpfError, InvalidStudentNameError, StudentAlreadyExistsError } f
 
 const makeSut = () => {
   const studentRepository = new StudentInMemoryRepository();
-  return new EnrollStudent(studentRepository)
+  return new EnrollStudent(studentRepository, studentRepository)
 }
 
 describe('Enroll Student', () => {
@@ -27,5 +27,23 @@ describe('Enroll Student', () => {
     const enrollmentRequest = { student: { name: "Ana Maria", cpf: "71436708044" }};
 
     expect(() => sut.execute(enrollmentRequest)).toThrow(new StudentAlreadyExistsError())
+  })
+
+  it ('Should return student when data is valid', () => {
+    const sut = makeSut();
+    const enrollmentRequest = { student: { name: "Gabriel Erick Pedro Fernandes", cpf: "07862433688" }};
+    const student = sut.execute(enrollmentRequest);
+
+    expect(student.getName()).toBe('Gabriel Erick Pedro Fernandes');
+    expect(student.getCpf()).toBe('07862433688');
+  })
+
+  it ('Should return student when data is valid and cpf with special characters', () => {
+    const sut = makeSut();
+    const enrollmentRequest = { student: { name: "Gabriel Erick Pedro Fernandes", cpf: "078.624.336-88" }};
+    const student = sut.execute(enrollmentRequest);
+
+    expect(student.getName()).toBe('Gabriel Erick Pedro Fernandes');
+    expect(student.getCpf()).toBe('07862433688');
   })
 })
