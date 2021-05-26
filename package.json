@@ -6,7 +6,7 @@
   "scripts": {
     "tsc:init": "tsc --init",
     "build": "tsc",
-    "test": "tsc && jest --colors --noStackTrace --passWithNoTests dist/"
+    "test": "rm -rf dist/ && tsc && jest --colors --noStackTrace --passWithNoTests dist/"
   },
   "keywords": [],
   "author": "",
