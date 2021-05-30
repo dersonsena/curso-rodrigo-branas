@@ -4,10 +4,12 @@ import { Name } from "./Name";
 export class Student {
   private name: Name;
   private cpf: Cpf;
+  private birthDate: Date;
 
-  constructor (name: string, cpf: string) {
+  constructor (name: string, cpf: string, birthDate: Date) {
     this.name = new Name(name);
     this.cpf = new Cpf(cpf.replace(/\D/g, ""));
+    this.birthDate = birthDate;
   }
 
   getName(): Name {
@@ -16,5 +18,9 @@ export class Student {
 
   getCpf(): Cpf {
     return this.cpf
+  }
+
+  getAge(): number {
+    return new Date().getFullYear() - this.birthDate.getFullYear()
   }
 }
